@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,10 +37,10 @@ public class HandController : MonoBehaviour
         {
             cardPositions.Add(minPos.position + distanceBetweenPoints * i);
 
-            // heldCards[i].transform.position = cardPositions[i];
-            // heldCards[i].transform.rotation = minPos.rotation;
-            
             heldCards[i].MoveToPoint(cardPositions[i], minPos.rotation);
+
+            heldCards[i].inHand = true;
+            heldCards[i].handPosition = i;
         }
     }
 }
