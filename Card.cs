@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -14,13 +13,24 @@ public class Card : MonoBehaviour
 
     public Image characterArt, bgArt;
 
+    private Vector3 _targetPoint;
+    private Quaternion _targetRotation;
+    public float moveSpeed = 5f, rotateSpeed = 540f;
+
+    public bool inHand;
+    public int handPosition;
+
+    private HandController _handController;
+
     // Start is called before the first frame update
     void Start()
     {
         SetupCard();
+
+        _handController = FindObjectOfType<HandController>();
     }
 
-    public void SetupCard()
+    private void SetupCard()
     {
         currentHealth = cardSO.currentHealth;
         attackPower = cardSO.attackPower;
@@ -38,11 +48,31 @@ public class Card : MonoBehaviour
         bgArt.sprite = cardSO.bgSprite;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        transform.position = Vector3.Lerp(transform.position, _targetPoint, moveSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, rotateSpeed * Time.deltaTime);
+    }
+
+    public void MoveToPoint(Vector3 pointToMoveTo, Quaternion rotationToMatch)
+    {
+        _targetPoint = pointToMoveTo;
+        _targetRotation = rotationToMatch;
     }
     
-    
+    private void OnMouseOver()
+    {
+        if (inHand)
+        {
+            MoveToPoint(_handController.cardPositions[handPosition] + new Vector3(0f, 1f, .5f), Quaternion.identity);
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        if (inHand)
+        {
+            MoveToPoint(_handController.cardPositions[handPosition], _handController.minPos.rotation);
+        }
+    }
 }

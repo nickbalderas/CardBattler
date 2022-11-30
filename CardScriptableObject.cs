@@ -12,6 +12,5 @@ public class CardScriptableObject : ScriptableObject
     
     public int currentHealth, attackPower, manaCost;
     
-    
     public Sprite characterSprite, bgSprite;
 }
