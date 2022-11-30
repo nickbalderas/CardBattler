@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -20,7 +18,7 @@ public class Card : MonoBehaviour
         SetupCard();
     }
 
-    public void SetupCard()
+    private void SetupCard()
     {
         currentHealth = cardSO.currentHealth;
         attackPower = cardSO.attackPower;
@@ -37,12 +35,4 @@ public class Card : MonoBehaviour
         characterArt.sprite = cardSO.characterSprite;
         bgArt.sprite = cardSO.bgSprite;
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    
-    
 }
