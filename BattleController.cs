@@ -65,6 +65,8 @@ public class BattleController : MonoBehaviour
         switch (currentPhase)
         {
             case TurnOrder.PlayerActive:
+                UIController.Instance.endTurnButton.SetActive(true);
+                UIController.Instance.drawCardButton.SetActive(true);
                 break;
             case TurnOrder.PlayerCardAttacks:
                 break;
@@ -77,5 +79,13 @@ public class BattleController : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    public void EndPlayerTurn()
+    {
+        UIController.Instance.endTurnButton.SetActive(false);
+        UIController.Instance.drawCardButton.SetActive(false);
+        
+        AdvanceTurn();
     }
 }
