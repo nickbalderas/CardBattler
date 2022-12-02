@@ -92,6 +92,8 @@ public class Card : MonoBehaviour
                         
                         inHand = false;
                         _isSelected = false;
+                        
+                        _handController.RemoveCardFromHand(this);
                     } else ReturnToHand();
                 } else ReturnToHand();
             }
