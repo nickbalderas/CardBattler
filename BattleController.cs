@@ -67,7 +67,6 @@ public class BattleController : MonoBehaviour
             case TurnOrder.PlayerActive:
                 break;
             case TurnOrder.PlayerCardAttacks:
-                AdvanceTurn();
                 break;
             case TurnOrder.EnemyActive:
                 AdvanceTurn();
