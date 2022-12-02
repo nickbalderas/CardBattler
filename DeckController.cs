@@ -19,6 +19,8 @@ public class DeckController : MonoBehaviour
 
     public Card cardToSpawn;
 
+    public int drawCardCost = 2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -63,5 +65,19 @@ public class DeckController : MonoBehaviour
         activeCards.RemoveAt(0);
         
         HandController.Instance.AddCardToHand(newCard);
+    }
+
+    public void DrawCardForMana()
+    {
+        if (BattleController.Instance.playerMana >= drawCardCost)
+        {
+            DrawCardToHand();
+            BattleController.Instance.SpendPlayerMana(drawCardCost);
+        }
+        else
+        {
+            UIController.Instance.ShowManaWarning();
+            UIController.Instance.drawCardButton.SetActive(false);
+        }
     }
 }
