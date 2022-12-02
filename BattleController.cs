@@ -14,8 +14,10 @@ public class BattleController : MonoBehaviour
 
     public int startingMana = 4, maxMana = 12;
     public int playerMana;
+    private int _currentPlayerMaxMana;
 
     public int startingCardsAmount = 5;
+    public int cardsToDrawPerTurn = 2;
     
     public enum TurnOrder
     {
@@ -29,8 +31,8 @@ public class BattleController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerMana = startingMana;
-        UIController.Instance.SetPlayerManaText(playerMana);
+        _currentPlayerMaxMana = startingMana;
+        FillPlayerMana();
         
         DeckController.Instance.DrawMultipleCards(startingCardsAmount);
     }
@@ -53,6 +55,12 @@ public class BattleController : MonoBehaviour
         UIController.Instance.SetPlayerManaText(playerMana);
     }
 
+    public void FillPlayerMana()
+    {
+        playerMana = _currentPlayerMaxMana;
+        UIController.Instance.SetPlayerManaText(playerMana);
+    }
+
     public void AdvanceTurn()
     {
         currentPhase++;
@@ -67,8 +75,19 @@ public class BattleController : MonoBehaviour
             case TurnOrder.PlayerActive:
                 UIController.Instance.endTurnButton.SetActive(true);
                 UIController.Instance.drawCardButton.SetActive(true);
+
+                if (_currentPlayerMaxMana < maxMana)
+                {
+                    _currentPlayerMaxMana++;
+                }
+                
+                FillPlayerMana();
+                
+                DeckController.Instance.DrawMultipleCards(cardsToDrawPerTurn);
+                
                 break;
             case TurnOrder.PlayerCardAttacks:
+                AdvanceTurn();
                 break;
             case TurnOrder.EnemyActive:
                 AdvanceTurn();
