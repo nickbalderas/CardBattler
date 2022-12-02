@@ -21,10 +21,12 @@ public class UIController : MonoBehaviour
 
     public GameObject drawCardButton;
 
+    public GameObject endTurnButton;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -55,5 +57,10 @@ public class UIController : MonoBehaviour
     public void DrawCard()
     {
         DeckController.Instance.DrawCardForMana();
+    }
+
+    public void EndPlayerTurn()
+    {
+        BattleController.Instance.EndPlayerTurn();
     }
 }
