@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -22,12 +23,21 @@ public class Card : MonoBehaviour
 
     private HandController _handController;
 
+    private bool _isSelected;
+    private Collider _theCollider;
+
+    public LayerMask whatIsDesktop, whatIsPlacement;
+    private bool justPressed;
+
+    public CardPlacePoint assignedPlace;
+
     // Start is called before the first frame update
     void Start()
     {
         SetupCard();
 
         _handController = FindObjectOfType<HandController>();
+        _theCollider = GetComponent<Collider>();
     }
 
     private void SetupCard()
@@ -52,6 +62,43 @@ public class Card : MonoBehaviour
     {
         transform.position = Vector3.Lerp(transform.position, _targetPoint, moveSpeed * Time.deltaTime);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, rotateSpeed * Time.deltaTime);
+
+        if (_isSelected)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit, 100f, whatIsDesktop))
+            {
+                MoveToPoint(hit.point + new Vector3(0f,2f,0f), Quaternion.identity);
+            }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                ReturnToHand();
+            }
+
+            if (Input.GetMouseButtonDown(0) && justPressed == false)
+            {
+                if (Physics.Raycast(ray, out hit, 100f, whatIsPlacement))
+                {
+                    CardPlacePoint selectedPoint = hit.collider.GetComponent<CardPlacePoint>();
+
+                    if (selectedPoint.activeCard == null && selectedPoint.isPlayerPoint)
+                    {
+                        selectedPoint.activeCard = this;
+                        assignedPlace = selectedPoint;
+                        MoveToPoint(selectedPoint.transform.position, Quaternion.identity);
+                        
+                        inHand = false;
+                        _isSelected = false;
+                        
+                        _handController.RemoveCardFromHand(this);
+                    } else ReturnToHand();
+                } else ReturnToHand();
+            }
+        }
+        justPressed = false;
     }
 
     public void MoveToPoint(Vector3 pointToMoveTo, Quaternion rotationToMatch)
@@ -74,5 +121,21 @@ public class Card : MonoBehaviour
         {
             MoveToPoint(_handController.cardPositions[handPosition], _handController.minPos.rotation);
         }
+    }
+
+    private void OnMouseDown()
+    {
+        if (!inHand) return;
+        _isSelected = true;
+        _theCollider.enabled = false;
+        justPressed = true;
+    }
+
+    private void ReturnToHand()
+    {
+        _isSelected = false;
+        _theCollider.enabled = true;
+        
+        MoveToPoint(_handController.cardPositions[handPosition], _handController.minPos.rotation);
     }
 }
