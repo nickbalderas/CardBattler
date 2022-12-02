@@ -69,6 +69,11 @@ public class Card : MonoBehaviour
             {
                 MoveToPoint(hit.point + new Vector3(0f,2f,0f), Quaternion.identity);
             }
+
+            if (Input.GetMouseButtonDown(1))
+            {
+                ReturnToHand();
+            }
         }
     }
 
@@ -101,5 +106,13 @@ public class Card : MonoBehaviour
             _isSelected = true;
             _theCollider.enabled = false;
         }
+    }
+
+    public void ReturnToHand()
+    {
+        _isSelected = false;
+        _theCollider.enabled = true;
+        
+        MoveToPoint(_handController.cardPositions[handPosition], _handController.minPos.rotation);
     }
 }
