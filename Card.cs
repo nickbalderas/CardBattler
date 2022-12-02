@@ -26,7 +26,10 @@ public class Card : MonoBehaviour
     private bool _isSelected;
     private Collider _theCollider;
 
-    public LayerMask whatIsDesktop;
+    public LayerMask whatIsDesktop, whatIsPlacement;
+    private bool justPressed;
+
+    public CardPlacePoint assignedPlace;
 
     // Start is called before the first frame update
     void Start()
@@ -74,7 +77,26 @@ public class Card : MonoBehaviour
             {
                 ReturnToHand();
             }
+
+            if (Input.GetMouseButtonDown(0) && justPressed == false)
+            {
+                if (Physics.Raycast(ray, out hit, 100f, whatIsPlacement))
+                {
+                    CardPlacePoint selectedPoint = hit.collider.GetComponent<CardPlacePoint>();
+
+                    if (selectedPoint.activeCard == null && selectedPoint.isPlayerPoint)
+                    {
+                        selectedPoint.activeCard = this;
+                        assignedPlace = selectedPoint;
+                        MoveToPoint(selectedPoint.transform.position, Quaternion.identity);
+                        
+                        inHand = false;
+                        _isSelected = false;
+                    } else ReturnToHand();
+                } else ReturnToHand();
+            }
         }
+        justPressed = false;
     }
 
     public void MoveToPoint(Vector3 pointToMoveTo, Quaternion rotationToMatch)
@@ -101,14 +123,13 @@ public class Card : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (inHand)
-        {
-            _isSelected = true;
-            _theCollider.enabled = false;
-        }
+        if (!inHand) return;
+        _isSelected = true;
+        _theCollider.enabled = false;
+        justPressed = true;
     }
 
-    public void ReturnToHand()
+    private void ReturnToHand()
     {
         _isSelected = false;
         _theCollider.enabled = true;
