@@ -42,7 +42,7 @@ public class Card : MonoBehaviour
         _theCollider = GetComponent<Collider>();
     }
 
-    private void SetupCard()
+    public void SetupCard()
     {
         currentHealth = cardSO.currentHealth;
         attackPower = cardSO.attackPower;

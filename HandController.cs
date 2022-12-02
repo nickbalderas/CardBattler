@@ -6,6 +6,13 @@ using UnityEngine.Serialization;
 
 public class HandController : MonoBehaviour
 {
+    public static HandController Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     public List<Card> heldCards = new List<Card>();
 
     public Transform minPos, maxPos;
@@ -55,6 +62,12 @@ public class HandController : MonoBehaviour
             Debug.LogError("Card at position " + cardToRemove.handPosition + " is not the card being removed from the hand.");
         }
         
+        SetCardPositionsInHand();
+    }
+
+    public void AddCardToHand(Card cardToAdd)
+    {
+        heldCards.Add(cardToAdd);
         SetCardPositionsInHand();
     }
 }
