@@ -1,8 +1,10 @@
 using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Debug = System.Diagnostics.Debug;
 
 public class Card : MonoBehaviour
 {
@@ -27,7 +29,7 @@ public class Card : MonoBehaviour
     private Collider _theCollider;
 
     public LayerMask whatIsDesktop, whatIsPlacement;
-    private bool justPressed;
+    private bool _justPressed;
 
     public CardPlacePoint assignedPlace;
 
@@ -67,8 +69,7 @@ public class Card : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 100f, whatIsDesktop))
+            if (Physics.Raycast(ray, out var hit, 100f, whatIsDesktop))
             {
                 MoveToPoint(hit.point + new Vector3(0f,2f,0f), Quaternion.identity);
             }
@@ -78,27 +79,38 @@ public class Card : MonoBehaviour
                 ReturnToHand();
             }
 
-            if (Input.GetMouseButtonDown(0) && justPressed == false)
+            if (Input.GetMouseButtonDown(0) && !_justPressed)
             {
                 if (Physics.Raycast(ray, out hit, 100f, whatIsPlacement))
                 {
                     CardPlacePoint selectedPoint = hit.collider.GetComponent<CardPlacePoint>();
 
-                    if (selectedPoint.activeCard == null && selectedPoint.isPlayerPoint)
+                    if (!selectedPoint.activeCard && selectedPoint.isPlayerPoint)
                     {
-                        selectedPoint.activeCard = this;
-                        assignedPlace = selectedPoint;
-                        MoveToPoint(selectedPoint.transform.position, Quaternion.identity);
+                        if (BattleController.Instance.playerMana >= manaCost)
+                        {
+                            selectedPoint.activeCard = this;
+                            assignedPlace = selectedPoint;
+                            MoveToPoint(selectedPoint.transform.position, Quaternion.identity);
                         
-                        inHand = false;
-                        _isSelected = false;
+                            inHand = false;
+                            _isSelected = false;
                         
-                        _handController.RemoveCardFromHand(this);
+                            _handController.RemoveCardFromHand(this);
+                            
+                            BattleController.Instance.SpendPlayerMana(manaCost);
+                        }
+                        else
+                        {
+                            ReturnToHand();
+                            
+                            UIController.Instance.ShowManaWarning();
+                        }
                     } else ReturnToHand();
                 } else ReturnToHand();
             }
         }
-        justPressed = false;
+        _justPressed = false;
     }
 
     public void MoveToPoint(Vector3 pointToMoveTo, Quaternion rotationToMatch)
@@ -128,7 +140,7 @@ public class Card : MonoBehaviour
         if (!inHand) return;
         _isSelected = true;
         _theCollider.enabled = false;
-        justPressed = true;
+        _justPressed = true;
     }
 
     private void ReturnToHand()
