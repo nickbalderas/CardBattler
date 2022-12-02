@@ -100,7 +100,12 @@ public class Card : MonoBehaviour
                             
                             BattleController.Instance.SpendPlayerMana(manaCost);
                         }
-                        else ReturnToHand();
+                        else
+                        {
+                            ReturnToHand();
+                            
+                            UIController.Instance.ShowManaWarning();
+                        }
                     } else ReturnToHand();
                 } else ReturnToHand();
             }
