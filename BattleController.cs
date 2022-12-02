@@ -17,6 +17,15 @@ public class BattleController : MonoBehaviour
 
     public int startingCardsAmount = 5;
     
+    public enum TurnOrder
+    {
+        PlayerActive,
+        PlayerCardAttacks,
+        EnemyActive,
+        EnemyCardAttacks
+    }
+    public TurnOrder currentPhase;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -42,5 +51,32 @@ public class BattleController : MonoBehaviour
         }
         
         UIController.Instance.SetPlayerManaText(playerMana);
+    }
+
+    public void AdvanceTurn()
+    {
+        currentPhase++;
+        
+        if ((int)currentPhase >= System.Enum.GetValues(typeof(TurnOrder)).Length)
+        {
+            currentPhase = 0;
+        }
+
+        switch (currentPhase)
+        {
+            case TurnOrder.PlayerActive:
+                break;
+            case TurnOrder.PlayerCardAttacks:
+                AdvanceTurn();
+                break;
+            case TurnOrder.EnemyActive:
+                AdvanceTurn();
+                break;
+            case TurnOrder.EnemyCardAttacks:
+                AdvanceTurn();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
