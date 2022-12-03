@@ -27,6 +27,11 @@ public class BattleController : MonoBehaviour
         EnemyCardAttacks
     }
     public TurnOrder currentPhase;
+
+    public Transform discardPoint;
+
+    public int playerHealth;
+    public int enemyHealth;
     
     // Start is called before the first frame update
     void Start()
@@ -87,13 +92,13 @@ public class BattleController : MonoBehaviour
                 
                 break;
             case TurnOrder.PlayerCardAttacks:
-                AdvanceTurn();
+                CardPointsController.Instance.PlayerAttack();
                 break;
             case TurnOrder.EnemyActive:
                 AdvanceTurn();
                 break;
             case TurnOrder.EnemyCardAttacks:
-                AdvanceTurn();
+                CardPointsController.Instance.EnemyAttack();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -106,5 +111,35 @@ public class BattleController : MonoBehaviour
         UIController.Instance.drawCardButton.SetActive(false);
         
         AdvanceTurn();
+    }
+
+    public void DamagePlayer(int damageAmount)
+    {
+        if (playerHealth > 0 )
+        {
+            playerHealth -= damageAmount;
+
+            if (playerHealth <= 0)
+            {
+                playerHealth = 0;
+                
+                // End Battle
+            }
+        }
+    }
+    
+    public void DamageEnemy(int damageAmount)
+    {
+        if (enemyHealth > 0 )
+        {
+            enemyHealth -= damageAmount;
+
+            if (enemyHealth <= 0)
+            {
+                enemyHealth = 0;
+                
+                // End Battle
+            }
+        }
     }
 }
