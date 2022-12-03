@@ -95,7 +95,7 @@ public class BattleController : MonoBehaviour
                 AdvanceTurn();
                 break;
             case TurnOrder.EnemyCardAttacks:
-                AdvanceTurn();
+                CardPointsController.Instance.EnemyAttack();
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
