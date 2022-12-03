@@ -40,6 +40,9 @@ public class BattleController : MonoBehaviour
         FillPlayerMana();
         
         DeckController.Instance.DrawMultipleCards(startingCardsAmount);
+        
+        UIController.Instance.SetPlayerHealthText(playerHealth);
+        UIController.Instance.SetEnemyHealthText(enemyHealth);
     }
 
     // Update is called once per frame
@@ -125,6 +128,12 @@ public class BattleController : MonoBehaviour
                 
                 // End Battle
             }
+            
+            UIController.Instance.SetPlayerHealthText(playerHealth);
+
+            UIDamageIndicator damageClone = Instantiate(UIController.Instance.playerDamage, UIController.Instance.playerDamage.transform.parent);
+            damageClone.damageText.text = damageAmount.ToString();
+            damageClone.gameObject.SetActive(true);
         }
     }
     
@@ -140,6 +149,12 @@ public class BattleController : MonoBehaviour
                 
                 // End Battle
             }
+            
+            UIController.Instance.SetEnemyHealthText(enemyHealth);
+            
+            UIDamageIndicator damageClone = Instantiate(UIController.Instance.enemyDamage, UIController.Instance.enemyDamage.transform.parent);
+            damageClone.damageText.text = damageAmount.ToString();
+            damageClone.gameObject.SetActive(true);
         }
     }
 }
