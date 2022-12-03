@@ -18,6 +18,16 @@ public class EnemyController : MonoBehaviour
 
     public Card cardToSpawn;
     public Transform cardSpawnPoint;
+    
+    public enum AIType
+    {
+        placeFromDeck,
+        handRandomPlace,
+        handDefensive,
+        handAggressive
+    }
+
+    public AIType enemyAIType;
 
     // Start is called before the first frame update
     void Start()
@@ -76,18 +86,28 @@ public class EnemyController : MonoBehaviour
             cardPlacePoints.RemoveAt(randomPoint);
         }
 
-        if (selectedPoint.activeCard == null)
+        switch (enemyAIType)
         {
-            Card newCard = Instantiate(cardToSpawn, cardSpawnPoint.position, cardSpawnPoint.rotation);
-            newCard.cardSO = _activeCards[0];
-            _activeCards.RemoveAt(0);
-            newCard.SetupCard();
-            newCard.MoveToPoint(selectedPoint.transform.position, selectedPoint.transform.rotation);
+            case AIType.placeFromDeck:
+                if (selectedPoint.activeCard == null)
+                {
+                    Card newCard = Instantiate(cardToSpawn, cardSpawnPoint.position, cardSpawnPoint.rotation);
+                    newCard.cardSO = _activeCards[0];
+                    _activeCards.RemoveAt(0);
+                    newCard.SetupCard();
+                    newCard.MoveToPoint(selectedPoint.transform.position, selectedPoint.transform.rotation);
 
-            selectedPoint.activeCard = newCard;
-            newCard.assignedPlace = selectedPoint;
+                    selectedPoint.activeCard = newCard;
+                    newCard.assignedPlace = selectedPoint;
+                }
+                break;
+            case AIType.handRandomPlace:
+                break;
+            case AIType.handDefensive:
+                break;
+            case AIType.handAggressive:
+                break;
         }
-
         yield return new WaitForSeconds(.5f);
 
         BattleController.Instance.AdvanceTurn();
