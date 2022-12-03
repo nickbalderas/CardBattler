@@ -27,6 +27,8 @@ public class BattleController : MonoBehaviour
         EnemyCardAttacks
     }
     public TurnOrder currentPhase;
+
+    public Transform discardPoint;
     
     // Start is called before the first frame update
     void Start()
