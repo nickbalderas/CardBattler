@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour
     public List<CardScriptableObject> deckToUse = new List<CardScriptableObject>();
     private List<CardScriptableObject> _activeCards = new List<CardScriptableObject>();
 
+    public Card cardToSpawn;
+    public Transform cardSpawnPoint;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -59,8 +62,34 @@ public class EnemyController : MonoBehaviour
         }
         
         yield return new WaitForSeconds(.5f);
-        
-        
+
+        List<CardPlacePoint> cardPlacePoints = new List<CardPlacePoint>();
+        cardPlacePoints.AddRange(CardPointsController.Instance.enemyCardPoints);
+
+        int randomPoint = Random.Range(0, cardPlacePoints.Count);
+        CardPlacePoint selectedPoint = cardPlacePoints[randomPoint];
+
+        while (selectedPoint.activeCard != null && cardPlacePoints.Count > 0)
+        {
+            randomPoint = Random.Range(0, cardPlacePoints.Count);
+            selectedPoint = cardPlacePoints[randomPoint];
+            cardPlacePoints.RemoveAt(randomPoint);
+        }
+
+        if (selectedPoint.activeCard == null)
+        {
+            Card newCard = Instantiate(cardToSpawn, cardSpawnPoint.position, cardSpawnPoint.rotation);
+            newCard.cardSO = _activeCards[0];
+            _activeCards.RemoveAt(0);
+            newCard.SetupCard();
+            newCard.MoveToPoint(selectedPoint.transform.position, selectedPoint.transform.rotation);
+
+            selectedPoint.activeCard = newCard;
+            newCard.assignedPlace = selectedPoint;
+        }
+
+        yield return new WaitForSeconds(.5f);
+
         BattleController.Instance.AdvanceTurn();
     }
 }
