@@ -30,8 +30,9 @@ public class BattleController : MonoBehaviour
 
     public Transform discardPoint;
 
-    public int playerHealth;
-    public int enemyHealth;
+    public int playerHealth, enemyHealth;
+
+    public bool hasBattleEnded;
     
     // Start is called before the first frame update
     void Start()
@@ -91,6 +92,8 @@ public class BattleController : MonoBehaviour
 
     public void AdvanceTurn()
     {
+        if (hasBattleEnded) return;
+        
         currentPhase++;
         
         if ((int)currentPhase >= System.Enum.GetValues(typeof(TurnOrder)).Length)
@@ -145,7 +148,7 @@ public class BattleController : MonoBehaviour
 
     public void DamagePlayer(int damageAmount)
     {
-        if (playerHealth > 0 )
+        if (playerHealth > 0 || !hasBattleEnded)
         {
             playerHealth -= damageAmount;
 
@@ -166,7 +169,7 @@ public class BattleController : MonoBehaviour
     
     public void DamageEnemy(int damageAmount)
     {
-        if (enemyHealth > 0 )
+        if (enemyHealth > 0 || !hasBattleEnded)
         {
             enemyHealth -= damageAmount;
 
@@ -174,7 +177,7 @@ public class BattleController : MonoBehaviour
             {
                 enemyHealth = 0;
                 
-                // End Battle
+                EndBattle();
             }
             
             UIController.Instance.SetEnemyHealthText(enemyHealth);
@@ -183,5 +186,10 @@ public class BattleController : MonoBehaviour
             damageClone.damageText.text = damageAmount.ToString();
             damageClone.gameObject.SetActive(true);
         }
+    }
+
+    private void EndBattle()
+    {
+        hasBattleEnded = true;
     }
 }

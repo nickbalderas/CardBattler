@@ -54,6 +54,9 @@ public class CardPointsController : MonoBehaviour
 
                 yield return new WaitForSeconds(timeBetweenAttack);
             }
+            
+            // Breaks out of loop if game has ended
+            if (BattleController.Instance.hasBattleEnded) i = playerCardPoints.Length;
         }
         
         CheckAssignedCards();
@@ -87,6 +90,9 @@ public class CardPointsController : MonoBehaviour
                 
                 yield return new WaitForSeconds(timeBetweenAttack);
             }
+
+            // Breaks out of loop if game has ended
+            if (BattleController.Instance.hasBattleEnded) i = enemyCardPoints.Length;
         }
         
         CheckAssignedCards();
