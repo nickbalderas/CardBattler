@@ -33,6 +33,8 @@ public class BattleController : MonoBehaviour
     public int playerHealth, enemyHealth;
 
     public bool hasBattleEnded;
+
+    public float resultScreenDelayTime = 1f;
     
     // Start is called before the first frame update
     void Start()
@@ -193,5 +195,14 @@ public class BattleController : MonoBehaviour
         hasBattleEnded = true;
         
         HandController.Instance.EmptyHand();
+
+        StartCoroutine(ShowResultsCoroutine());
+    }
+
+    IEnumerator ShowResultsCoroutine()
+    {
+        yield return new WaitForSeconds(resultScreenDelayTime);
+        
+        UIController.Instance.battleEndScreen.SetActive(true);
     }
 }
