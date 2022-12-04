@@ -158,7 +158,7 @@ public class BattleController : MonoBehaviour
             {
                 playerHealth = 0;
                 
-                // End Battle
+                EndBattle();
             }
             
             UIController.Instance.SetPlayerHealthText(playerHealth);
@@ -196,6 +196,31 @@ public class BattleController : MonoBehaviour
         
         HandController.Instance.EmptyHand();
 
+        if (enemyHealth <= 0)
+        {
+            UIController.Instance.battleResultText.text = "VICTORY!";
+
+            foreach (var enemyCardPoint in CardPointsController.Instance.enemyCardPoints)
+            {
+                if (enemyCardPoint.activeCard != null)
+                {
+                    enemyCardPoint.activeCard.MoveToPoint(discardPoint.position, enemyCardPoint.activeCard.transform.rotation);
+                }
+            }
+        }
+        else
+        {
+            UIController.Instance.battleResultText.text = "DEFEATED!";
+            
+            foreach (var playerCardPoint in CardPointsController.Instance.playerCardPoints)
+            {
+                if (playerCardPoint.activeCard != null)
+                {
+                    playerCardPoint.activeCard.MoveToPoint(discardPoint.position, playerCardPoint.activeCard.transform.rotation);
+                }
+            }
+        }
+        
         StartCoroutine(ShowResultsCoroutine());
     }
 
