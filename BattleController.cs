@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class BattleController : MonoBehaviour
 {
@@ -18,6 +20,9 @@ public class BattleController : MonoBehaviour
 
     public int startingCardsAmount = 5;
     public int cardsToDrawPerTurn = 2;
+
+    [Range(0f, 1f)]
+    public float playerFirstChance = 0.5f;
     
     public enum TurnOrder
     {
@@ -48,6 +53,10 @@ public class BattleController : MonoBehaviour
         
         UIController.Instance.SetPlayerHealthText(playerHealth);
         UIController.Instance.SetEnemyHealthText(enemyHealth);
+
+        if (!(Random.value > playerFirstChance)) return;
+        currentPhase = TurnOrder.PlayerCardAttacks;
+        AdvanceTurn();
     }
 
     // Update is called once per frame

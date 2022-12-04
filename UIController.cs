@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class UIController : MonoBehaviour
     public GameObject battleEndScreen;
     public TMP_Text battleResultText;
 
+    public string mainMenuScene, battleSelectScene;
+
+    public GameObject pauseScreen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +50,11 @@ public class UIController : MonoBehaviour
             {
                 manaWarning.SetActive(false);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseUnpause();
         }
     }
 
@@ -86,16 +96,25 @@ public class UIController : MonoBehaviour
 
     public void MainMenu()
     {
-        
+        SceneManager.LoadScene(mainMenuScene);
+        Time.timeScale = 1f;
     }
 
     public void RestartLevel()
     {
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        Time.timeScale = 1f;
     }
 
     public void ChooseNewBattle()
     {
-        
+        SceneManager.LoadScene(battleSelectScene);
+        Time.timeScale = 1f;
+    }
+
+    public void PauseUnpause()
+    {
+        pauseScreen.SetActive(!pauseScreen.activeSelf);
+        Time.timeScale = pauseScreen.activeSelf ? 0f : 1f;
     }
 }
