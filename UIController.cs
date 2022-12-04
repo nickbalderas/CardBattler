@@ -25,6 +25,9 @@ public class UIController : MonoBehaviour
 
     public UIDamageIndicator playerDamage, enemyDamage;
 
+    public GameObject battleEndScreen;
+    public TMP_Text battleResultText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,5 +82,20 @@ public class UIController : MonoBehaviour
     public void EndPlayerTurn()
     {
         BattleController.Instance.EndPlayerTurn();
+    }
+
+    public void MainMenu()
+    {
+        
+    }
+
+    public void RestartLevel()
+    {
+        
+    }
+
+    public void ChooseNewBattle()
+    {
+        
     }
 }
