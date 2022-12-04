@@ -191,5 +191,7 @@ public class BattleController : MonoBehaviour
     private void EndBattle()
     {
         hasBattleEnded = true;
+        
+        HandController.Instance.EmptyHand();
     }
 }
