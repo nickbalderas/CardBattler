@@ -207,6 +207,54 @@ public class EnemyController : MonoBehaviour
                 
                 break;
             case AIType.handAggressive:
+                selectedCard = SelectedCardToPlay();
+                
+                preferredPoints.Clear();
+                secondaryPoints.Clear();
+
+                for (int i = 0; i < cardPlacePoints.Count; i++)
+                {
+                    if (cardPlacePoints[i].activeCard == null)
+                    {
+                        if (CardPointsController.Instance.playerCardPoints[i].activeCard == null)
+                        {
+                            preferredPoints.Add(cardPlacePoints[i]);
+                        }
+                        else
+                        {
+                            secondaryPoints.Add(cardPlacePoints[i]);
+                        }
+                    }
+                }
+
+                iterations = 50;
+                while (selectedCard != null && iterations > 0 && preferredPoints.Count + secondaryPoints.Count > 0)
+                {
+                    // pick a point to use
+                    if (preferredPoints.Count > 0)
+                    {
+                        int selectPoint = Random.Range(0, preferredPoints.Count);
+                        selectedPoint = preferredPoints[selectPoint];
+                        
+                        preferredPoints.RemoveAt(selectPoint);
+                    }
+                    else
+                    {
+                        int selectPoint = Random.Range(0, secondaryPoints.Count);
+                        selectedPoint = secondaryPoints[selectPoint];
+                        
+                        secondaryPoints.RemoveAt(selectPoint);
+                    }
+                    
+                    PlayCard(selectedCard, selectedPoint);
+                    
+                    // check if we should try and play another card
+
+                    selectedCard = SelectedCardToPlay();
+
+                    iterations--;
+                    yield return new WaitForSeconds(CardPointsController.Instance.timeBetweenAttack);
+                }
                 break;
         }
         yield return new WaitForSeconds(.5f);
