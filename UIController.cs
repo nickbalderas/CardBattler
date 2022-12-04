@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -27,6 +28,8 @@ public class UIController : MonoBehaviour
 
     public GameObject battleEndScreen;
     public TMP_Text battleResultText;
+
+    public string mainMenuScene, battleSelectScene;
 
     // Start is called before the first frame update
     void Start()
@@ -86,16 +89,16 @@ public class UIController : MonoBehaviour
 
     public void MainMenu()
     {
-        
+        SceneManager.LoadScene(mainMenuScene);
     }
 
     public void RestartLevel()
     {
-        
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ChooseNewBattle()
     {
-        
+        SceneManager.LoadScene(battleSelectScene);
     }
 }
