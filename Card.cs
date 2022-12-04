@@ -73,7 +73,7 @@ public class Card : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, _targetPoint, moveSpeed * Time.deltaTime);
         transform.rotation = Quaternion.RotateTowards(transform.rotation, _targetRotation, rotateSpeed * Time.deltaTime);
 
-        if (_isSelected)
+        if (_isSelected && BattleController.Instance.hasBattleEnded == false && Time.timeScale != 0f)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -145,7 +145,7 @@ public class Card : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (!inHand && BattleController.Instance.currentPhase != BattleController.TurnOrder.PlayerActive && !isPlayer && !BattleController.Instance.hasBattleEnded) return;
+        if (!inHand && BattleController.Instance.currentPhase != BattleController.TurnOrder.PlayerActive && !isPlayer && !BattleController.Instance.hasBattleEnded && Time.timeScale != 0f) return;
         _isSelected = true;
         _theCollider.enabled = false;
         _justPressed = true;
